@@ -20,10 +20,8 @@ import atexit
 import threading
 from functools import partial
 from typing import Tuple, Optional
-from assistant_logic import initialize_assistant, handle_assistant_response, DentalAssistant
 from typing import Dict, Any
 from enum import Enum
-from assistant_logic import ConversationState
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
