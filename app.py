@@ -27,10 +27,13 @@ from enum import Enum
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+# Configure Flask app
 app = Flask(__name__, 
     static_folder='static',
     template_folder='templates'
 )
+CORS(app)
+
 assistant = SimpleAssistant()
 
 def async_route(f):

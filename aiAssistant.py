@@ -1,23 +1,16 @@
 import os
 import json
 import requests
-import asyncio  # Add this import
+import asyncio
 from datetime import datetime
 from openai import OpenAI
 from dotenv import load_dotenv
 from typing import Dict, Optional
-
-# Update logging configuration at the top of the file
 import logging
-logging.basicConfig(level=logging.INFO)  # Change from DEBUG to INFO
-logger = logging.getLogger(__name__)
 
-# Configure loggers to minimize noise
-logging.getLogger('httpcore').setLevel(logging.WARNING)
-logging.getLogger('httpx').setLevel(logging.WARNING)
-logging.getLogger('openai').setLevel(logging.WARNING)
-logging.getLogger('asyncio').setLevel(logging.WARNING)
-logging.getLogger('werkzeug').setLevel(logging.WARNING)
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
