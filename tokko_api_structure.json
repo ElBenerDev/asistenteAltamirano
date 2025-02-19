@@ -1,0 +1,282 @@
+{
+  "/property/": {
+    "status": "success",
+    "data_structure": {
+      "meta": {
+        "limit": 1,
+        "next": "/api/v1/property/?lang=es&offset=1&limit=1&key=34430fc661d5b961de6fd53a9382f7a232de3ef0&format=json",
+        "offset": 0,
+        "previous": null,
+        "total_count": 147
+      },
+      "objects": [
+        {
+          "address": "Lavalle al 1900 entre Sarmiento e Italia",
+          "age": 30,
+          "bathroom_amount": 1,
+          "branch": null,
+          "created_at": "2014-05-12T20:49:17",
+          "custom1": "0.00",
+          "custom_tags": [],
+          "deleted_at": "2025-01-24T12:32:27",
+          "depth_measure": "0.00",
+          "description": "            Departamento de 2 ambientes al Frente.\nCocina independiente, baño completo, dormitorio con placard.\nBalcón corrido al frente.\n2do. piso por escalera. \nMuy buen estado. \nBajas expensas.\nEntrega inmediata.\n\n\nCódigo de propiedad: ( AAP37816)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+          "description_only": "<p>            Departamento de 2 ambientes al Frente.</p><p>Cocina independiente, baño completo, dormitorio con placard.</p><p>Balcón corrido al frente.</p><p>2do. piso por escalera. </p><p>Muy buen estado. </p><p>Bajas expensas.</p><p>Entrega inmediata.</p>",
+          "development": null,
+          "development_excel_extra_data": "[]",
+          "disposition": "Front",
+          "expenses": 60000,
+          "extra_attributes": [],
+          "fake_address": "Lavalle al 1900 entre Sarmiento e Italia",
+          "files": [],
+          "floors_amount": 1,
+          "footer": "Código de propiedad: ( AAP37816)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+          "front_measure": "0.00",
+          "geo_lat": "-34.5430389312",
+          "geo_long": "-58.5489995184",
+          "gm_location_type": "BY_HAND",
+          "has_temporary_rent": false,
+          "id": 37816,
+          "is_denounced": false,
+          "is_starred_on_web": true,
+          "legally_checked": "Desconocido",
+          "location": {
+            "divisions": [
+              {
+                "id": 25035,
+                "name": "Chilavert",
+                "resource_uri": "/api/v1/location/25035/"
+              },
+              {
+                "id": 25036,
+                "name": "Malaver",
+                "resource_uri": "/api/v1/location/25036/"
+              },
+              {
+                "id": 25037,
+                "name": "V.Zagala",
+                "resource_uri": "/api/v1/location/25037/"
+              }
+            ],
+            "full_location": "Argentina | G.B.A. Zona Norte | General San Martin | Villa Ballester",
+            "id": 25034,
+            "name": "Villa Ballester",
+            "parent_division": "/api/v1/location/25013/",
+            "short_location": "G.B.A. Zona Norte | General San Martin | Villa Ballester",
+            "state": null,
+            "weight": 7615
+          },
+          "occupation": [],
+          "operations": [
+            {
+              "operation_id": 1,
+              "operation_type": "Sale",
+              "prices": [
+                {
+                  "currency": "USD",
+                  "period": 0,
+                  "price": 48000
+                }
+              ]
+            }
+          ],
+          "orientation": "North-East",
+          "parking_lot_amount": 0,
+          "photos": [
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_113499480060805290429024444325117114980516586068023152054082175533140229539500.jpg",
+              "is_blueprint": false,
+              "is_front_cover": true,
+              "order": 1,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_113499480060805290429024444325117114980516586068023152054082175533140229539500.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_113499480060805290429024444325117114980516586068023152054082175533140229539500_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_78026922427095127889349286485473637599668485928077636658291975481119784519785.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 0,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_78026922427095127889349286485473637599668485928077636658291975481119784519785.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_78026922427095127889349286485473637599668485928077636658291975481119784519785_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_9346924099824711536539032078151085189443915008930659598447811875111039632784.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 2,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_9346924099824711536539032078151085189443915008930659598447811875111039632784.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_9346924099824711536539032078151085189443915008930659598447811875111039632784_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_25242963646400654702106459989906800390022232574817610508308268006381249149329.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 3,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_25242963646400654702106459989906800390022232574817610508308268006381249149329.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_25242963646400654702106459989906800390022232574817610508308268006381249149329_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_40094282371843787311335834625852797777585725091535934641769601292187430805697.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 4,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_40094282371843787311335834625852797777585725091535934641769601292187430805697.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_40094282371843787311335834625852797777585725091535934641769601292187430805697_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_9071489901908398584897362463538394194725329818683044604050172679966500510191.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 5,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_9071489901908398584897362463538394194725329818683044604050172679966500510191.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_9071489901908398584897362463538394194725329818683044604050172679966500510191_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_89546647876136754644106683506655326608661359458209379917774218919847888814763.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 6,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_89546647876136754644106683506655326608661359458209379917774218919847888814763.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_89546647876136754644106683506655326608661359458209379917774218919847888814763_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_106053529491465482971179508695833170786306256303019182066925921322801678210472.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 7,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_106053529491465482971179508695833170786306256303019182066925921322801678210472.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_106053529491465482971179508695833170786306256303019182066925921322801678210472_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_45985424182347671123178917851129358893082428964627928028841008563477018500297.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 8,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_45985424182347671123178917851129358893082428964627928028841008563477018500297.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_45985424182347671123178917851129358893082428964627928028841008563477018500297_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_16195722012603230480254047090087310010133295768774693706239409233804962361603.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 9,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_16195722012603230480254047090087310010133295768774693706239409233804962361603.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_16195722012603230480254047090087310010133295768774693706239409233804962361603_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_87685325978367082234765495293879689247233383341977418317236791369048907971410.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 10,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_87685325978367082234765495293879689247233383341977418317236791369048907971410.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_87685325978367082234765495293879689247233383341977418317236791369048907971410_thumb.jpg"
+            },
+            {
+              "description": null,
+              "image": "https://static.tokkobroker.com/w_pics/37816_4573389751704945695746193310489204014147586187991719231745915945079114349541.jpg",
+              "is_blueprint": false,
+              "is_front_cover": false,
+              "order": 11,
+              "original": "https://static.tokkobroker.com/original_pictures/37816_4573389751704945695746193310489204014147586187991719231745915945079114349541.jpg",
+              "thumb": "https://static.tokkobroker.com/thumbs/37816_4573389751704945695746193310489204014147586187991719231745915945079114349541_thumb.jpg"
+            }
+          ],
+          "producer": {
+            "cellphone": "549113041-5550",
+            "email": "mariana@altamirano.com.ar",
+            "id": 304,
+            "name": "Mariana Schnabel",
+            "phone": "4849-1900",
+            "picture": "https://static.tokkobroker.com/userprofile/pictures/34747426682438508777044898216669655449836327967856635623855756125642613496711",
+            "position": "Ventas - Alquileres"
+          },
+          "property_condition": "Good",
+          "public_url": "https://ficha.info/p/djZ6ce4e2Ga",
+          "publication_title": "Departamento de 2 ambientes en Venta en Villa Ballester",
+          "real_address": "Lavalle 1944 2° G",
+          "reference_code": "AAP37816",
+          "rich_description": "<p>            Departamento de 2 ambientes al Frente.</p><p>Cocina independiente, baño completo, dormitorio con placard.</p><p>Balcón corrido al frente.</p><p>2do. piso por escalera. </p><p>Muy buen estado. </p><p>Bajas expensas.</p><p>Entrega inmediata.</p>\n\nCódigo de propiedad: ( AAP37816)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+          "roofed_surface": "38.00",
+          "room_amount": 2,
+          "semiroofed_surface": "6.00",
+          "situation": "Empty",
+          "status": 2,
+          "suite_amount": 1,
+          "surface": "44.00",
+          "surface_measurement": "M2",
+          "tags": [
+            {
+              "id": 1,
+              "name": "Water",
+              "type": 1
+            },
+            {
+              "id": 2,
+              "name": "Sewage",
+              "type": 1
+            },
+            {
+              "id": 3,
+              "name": "Natural Gas",
+              "type": 1
+            },
+            {
+              "id": 10,
+              "name": "Balcony",
+              "type": 2
+            },
+            {
+              "id": 12,
+              "name": "Kitchen",
+              "type": 2
+            },
+            {
+              "id": 21,
+              "name": "Living",
+              "type": 2
+            }
+          ],
+          "toilet_amount": 0,
+          "total_surface": "44.00",
+          "transaction_requirements": "",
+          "type": {
+            "code": "AP",
+            "id": 2,
+            "name": "Apartment"
+          },
+          "unroofed_surface": "0.00",
+          "videos": [],
+          "web_price": true,
+          "zonification": "Residencial"
+        }
+      ]
+    }
+  },
+  "/property/search/": {
+    "status": "error",
+    "status_code": 400
+  },
+  "/property/property_types/": {
+    "status": "error",
+    "status_code": 404
+  },
+  "/property/operation_types/": {
+    "status": "error",
+    "status_code": 404
+  },
+  "/property/tags/": {
+    "status": "error",
+    "status_code": 404
+  }
+}

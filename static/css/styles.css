@@ -1,0 +1,185 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --background-color: #f8f9fa;
+    --chat-bg: #ffffff;
+    --message-user-bg: #3498db;
+    --message-assistant-bg: #ecf0f1;
+}
+
+/* Mobile-first responsive design */
+body {
+    background-color: var(--background-color);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Message Styling */
+.message {
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    border-radius: 15px;
+    max-width: 85%;
+    width: fit-content;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.user-message {
+    background: var(--message-user-bg);
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
+}
+
+.assistant-message {
+    background: var(--message-assistant-bg);
+    margin-right: auto;
+    border-bottom-left-radius: 5px;
+}
+
+/* Property Card Styling */
+.property-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.property-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+.property-title {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+.property-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--background-color);
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.property-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: var(--background-color);
+    border-radius: 8px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.property-photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.property-photos img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.property-photos img:hover {
+    transform: scale(1.05);
+}
+
+.property-description {
+    background: var(--background-color);
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.property-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--secondary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-top: 1rem;
+    transition: background 0.2s;
+}
+
+.property-link:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.property-separator {
+    margin: 2rem 0;
+    border: none;
+    border-top: 2px solid var(--background-color);
+}
+
+/* Separator Styling */
+.message-separator {
+    border: none;
+    border-top: 2px solid var(--secondary-color);
+    margin: 1.5rem 0;
+    opacity: 0.2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .property-photos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .property-photos img {
+        height: 120px;
+    }
+    
+    .property-details {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .property-photos {
+        grid-template-columns: 1fr;
+    }
+    
+    .property-photos img {
+        height: 200px;
+    }
+    
+    .property-details {
+        grid-template-columns: 1fr;
+    }
+}
