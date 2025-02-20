@@ -1,15 +1,24 @@
-# Environment variables
+# Environment
 .env
 .env.*
 !.env.example
+venv/
+ENV/
 
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
 
 # IDE
 .vscode/
 *.code-workspace
+.idea/
 
 # Logs
 *.log
+logs/
+
+# System
+.DS_Store
+Thumbs.db

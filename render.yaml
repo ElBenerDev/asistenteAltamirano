@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: asistente-altamirano
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: TOKKO_API_KEY
+        sync: false
+      - key: TOKKO_BASE_URL
+        value: https://www.tokkobroker.com/api/v1

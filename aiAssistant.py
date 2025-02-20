@@ -5,7 +5,7 @@ import asyncio
 from datetime import datetime
 from openai import OpenAI
 from dotenv import load_dotenv
-from typing import Dict, Optional
+from typing import Dict
 import logging
 
 # Configure logging
