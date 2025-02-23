@@ -1,0 +1,15 @@
+runtime: python39
+env: standard
+instance_class: F1
+
+service_account: asistente-altamirano@appspot.gserviceaccount.com
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 1
+  max_instances: 10
+
+env_variables:
+  TOKKO_BASE_URL: "https://www.tokkobroker.com/api/v1"
+
+entrypoint: gunicorn -b :$PORT app:app

@@ -5,7 +5,7 @@ import asyncio
 from datetime import datetime
 from openai import OpenAI
 from dotenv import load_dotenv
-from typing import Dict
+from typing import Dict, Optional
 import logging
 
 # Configure logging
@@ -85,9 +85,11 @@ class PropertyCache:
                 if location not in prop_location:
                     matches = False
             
-            # Filter by rooms
-            if matches and search_params.get('rooms'):
-                if prop.get('room_amount') != search_params['rooms']:
+            # Update room filtering to use minimum rooms
+            if matches and search_params.get('min_rooms'):
+                min_rooms = search_params['min_rooms']
+                prop_rooms = prop.get('room_amount', 0)
+                if prop_rooms < min_rooms:  # Changed from exact match to minimum
                     matches = False
             
             # Filter by price
@@ -336,14 +338,12 @@ class SimpleAssistant:
         self.tokko_client = TokkoClient(TOKKO_API_KEY)
         self.assistant_id = self._create_assistant()
         self.thread_id = None
-        self.current_search = {}  # Store search context
         self.search_context = {
             'location': None,
             'operation_type': None,
-            'rooms': None,
-            'search_ready': False
+            'property_type': None,
+            'rooms': None
         }
-        self.property_pool = None  # Add this to store filtered properties
         logger.info("Real Estate Assistant initialized")
 
     def _create_assistant(self) -> str:
@@ -351,199 +351,226 @@ class SimpleAssistant:
             name="Real Estate Assistant",
             instructions="""Sos un asistente inmobiliario profesional para Altamirano Properties en Argentina.
 
-        COMPORTAMIENTO:
-        - Usar español argentino siempre (vos, che, etc.)
-        - Ser cordial pero profesional
-        - Mantener un tono amigable sin perder formalidad
-        - NUNCA inventar propiedades
-        - NUNCA decir "un momento" o "estoy buscando"
-        - NUNCA usar "tú" o expresiones españolas
+            COMPORTAMIENTO:
+            - Usar español argentino siempre (vos, che, etc.)
+            - Ser cordial pero profesional
+            - Mantener un tono amigable sin perder formalidad
+            - NUNCA inventar propiedades
+            - NUNCA decir "un momento" o "estoy buscando"
+            - NUNCA usar "tú" o expresiones españolas
 
-        RECOLECCIÓN DE INFO (EN ORDEN):
-        1. Primero preguntar zona si no la menciona
-        2. Después preguntar si busca alquilar o comprar
-        3. Después qué tipo de propiedad:
-           - Depto
-           - Casa
-           - Local
-           - Oficina
-           - PH
-        4. Después cantidad de ambientes
-        5. Por último, presupuesto (opcional)
+            RECOLECCIÓN DE INFO (EN ORDEN):
+            1. Primero preguntar zona si no la menciona
+            2. Después preguntar si busca alquilar o comprar
+            3. Después qué tipo de propiedad:
+               - Depto
+               - Casa
+               - Local
+               - Oficina
+               - PH
+            4. Después cantidad de ambientes
+            5. Por último, presupuesto (opcional)
 
-        EJEMPLOS DE DIÁLOGO:
-        Usuario: "en ballester"
-        Asistente: "¿Estás buscando para alquilar o comprar en Villa Ballester?"
-        
-        Usuario: "alquilar"
-        Asistente: "¿Qué tipo de propiedad te interesa? (depto, casa, local, etc.)"
-        
-        Usuario: "un depto"
-        Asistente: "¿Cuántos ambientes necesitás?"
+            EJEMPLOS DE DIÁLOGO:
+            Usuario: "en ballester"
+            Asistente: "¿Estás buscando para alquilar o comprar en Villa Ballester?"
+            
+            Usuario: "alquilar"
+            Asistente: "¿Qué tipo de propiedad te interesa? (depto, casa, local, etc.)"
+            
+            Usuario: "un depto"
+            Asistente: "¿Cuántos ambientes necesitás?"
 
-        MANEJO DE PRECIOS:
-        - Para alquileres, consultar presupuesto máximo mensual
-        - Aceptar precios en USD o pesos
-        - Entender expresiones como:
-          * "hasta X USD/pesos"
-          * "máximo X USD/pesos"
-          * "que no pase de X USD/pesos"
-        
-        TÉRMINOS ARGENTINOS:
-        - Usar "depto" o "departamento"
-        - "Ambientes" (no "habitaciones" ni "dormitorios")
-        - "Expensas" para gastos comunes
-        - "Cochera" (no "estacionamiento" ni "parking")
-        - "PH" para Propiedad Horizontal
-        - "Monoambiente" para estudios
-        - "Dueño directo" vs "inmobiliaria"
-        - "Garantía propietaria" o "seguro de caución"
-        
-        EXPRESIONES ARGENTINAS:
-        - "¿Qué tipo de propiedad estás buscando?"
-        - "¿En qué zona te interesa?"
-        - "¿Te sirve que tenga cochera?"
-        - "¿Necesitás que acepten mascotas?"
-        - "¿Te viene bien ver algunas opciones?"
-        
-        RESPUESTAS NATURALES:
-        Usuario: "hola"
-        Asistente: "¡Hola! ¿En qué zona estás buscando propiedad?"
-        
-        Usuario: "busco depto"
-        Asistente: "¿En qué barrio te gustaría encontrar el depto?"
-        
-        Usuario: "en ballester, 2 ambientes"
-        Asistente: "¿Estás buscando para alquilar o comprar?"
-        
-        DATOS IMPORTANTES:
-        - Mencionar si acepta mascotas
-        - Aclarar si tiene expensas
-        - Informar requisitos (garantía, seguro, etc.)
-        - Especificar si es apto profesional
-        - Indicar si es luminoso/exterior""",
-        model="gpt-3.5-turbo"
+            TÉRMINOS ARGENTINOS:
+            - Usar "depto" o "departamento"
+            - "Ambientes" (no "habitaciones" ni "dormitorios")
+            - "Expensas" para gastos comunes
+            - "Cochera" (no "estacionamiento" ni "parking")
+            - "PH" para Propiedad Horizontal""",
+            model="gpt-3.5-turbo",
+            tools=[{
+                "type": "function",
+                "function": {
+                    "name": "search_properties",
+                    "description": "Search for properties based on criteria",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "location": {"type": "string"},
+                            "operation_type": {"type": "string", "enum": ["Rent", "Sale"]},
+                            "property_type": {"type": "string", "enum": ["Apartment", "House", "Office", "Local"]},
+                            "rooms": {"type": "integer", "minimum": 1},
+                            "max_price": {"type": "number"}
+                        }
+                    }
+                }
+            }]
         )
         return assistant.id
 
-    async def start_conversation(self):
-        """Initialize a new conversation thread"""
-        thread = self.client.beta.threads.create()
-        self.thread_id = thread.id
-        return thread.id
+    def format_property_response(self, properties: list) -> str:
+        """Format properties into a structured markdown response."""
+        formatted = []
+        for idx, prop in enumerate(properties, 1):
+            # Get operation details
+            operation = next((op for op in prop.get('operations', []) 
+                            if op.get('prices')), {})
+            
+            # Get the first price if available
+            price_data = next(iter(operation.get('prices', [])), {})
+            price = f"{price_data.get('price', 'Consultar'):,}" if price_data else 'Consultar'
+            
+            # Format property text with full details
+            property_text = (
+                f"{idx}. **{prop.get('publication_title', 'Departamento')}**\n"
+                f"   - Operación: {operation.get('operation_type', 'N/D')}\n"
+                f"   - Tipo: {prop.get('type', {}).get('name', 'Departamento')}\n"
+                f"   - Precio: ${price}\n"
+                f"   - Ambientes: {prop.get('room_amount', 'N/D')}\n"
+                f"   - Superficie: {prop.get('total_surface', 'N/D')} m2\n"
+                f"   - Expensas: ${prop.get('expenses', 0):,}\n"
+                f"   - Descripción: {prop.get('description', 'Sin descripción')}\n"
+            )
 
-    async def chat(self, message: str) -> Dict:
+            # Add photos if available
+            if prop.get('photos'):
+                first_photo = prop['photos'][0]
+                image_url = first_photo.get('image', {}).get('url', '') if isinstance(first_photo.get('image'), dict) else first_photo.get('image', '')
+                if image_url:
+                    property_text += f"   - imagen:{image_url}\n"
+
+            # Add link to property
+            if prop.get('public_url'):
+                property_text += f"   - [Ver más detalles]({prop['public_url']})\n"
+
+            formatted.append(property_text)
+        
+        # Join all properties with double newlines for better readability
+        return "\n\n".join(formatted)
+
+    async def chat(self, message: str, thread_id: Optional[str] = None) -> Dict:
         try:
             logger.info("=== New Chat Message ===")
             logger.info(f"User message: {message}")
-            message_lower = message.lower()
 
-            # Update search context based on user message
-            context_changed = False
+            # Use provided thread_id or create new one
+            if thread_id:
+                self.thread_id = thread_id
+            elif not self.thread_id:
+                thread = self.client.beta.threads.create()
+                self.thread_id = thread.id
+                logger.info(f"Created new thread: {self.thread_id}")
 
-            # Location detection
-            if 'ballester' in message_lower:
-                self.search_context['location'] = 'Villa Ballester'
-                context_changed = True
-                logger.info("Location set: Villa Ballester")
-            
-            # Operation type detection
-            if any(word in message_lower for word in ['alquil', 'renta', 'alquilar']):
-                self.search_context['operation_type'] = 'Rent'
-                context_changed = True
-                logger.info("Operation type set: Rent")
-            elif any(word in message_lower for word in ['compr', 'venta', 'comprar']):
-                self.search_context['operation_type'] = 'Sale'
-                context_changed = True
-                logger.info("Operation type set: Sale")
-            
-            # Property type detection
-            if any(word in message_lower for word in ['departamento', 'apartamento', 'depto', 'dpto']):
-                self.search_context['property_type'] = 'Apartment'
-                context_changed = True
-                logger.info("Property type set: Apartment")
-            elif 'casa' in message_lower:
-                self.search_context['property_type'] = 'House'
-                context_changed = True
-                logger.info("Property type set: House")
-
-            # Get assistant response
-            if not self.thread_id:
-                await self.start_conversation()
-
+            # Add message to thread
             self.client.beta.threads.messages.create(
                 thread_id=self.thread_id,
                 role="user",
                 content=message
             )
 
+            # Run assistant
             run = self.client.beta.threads.runs.create(
                 thread_id=self.thread_id,
                 assistant_id=self.assistant_id
             )
 
+            # Wait for completion
             while True:
-                run_status = self.client.beta.threads.runs.retrieve(
+                run = self.client.beta.threads.runs.retrieve(
                     thread_id=self.thread_id,
                     run_id=run.id
                 )
-                if run_status.status == 'completed':
+                if run.status == 'completed':
                     break
+                elif run.status == 'requires_action':
+                    # Handle function calls
+                    if run.required_action.type == 'submit_tool_outputs':
+                        tool_outputs = []
+                        for tool_call in run.required_action.submit_tool_outputs.tool_calls:
+                            if tool_call.function.name == 'search_properties':
+                                args = json.loads(tool_call.function.arguments)
+                                results = self.tokko_client.search_properties(args)
+                                
+                                if results.get('properties'):
+                                    properties_data = []
+                                    for prop in results['properties']:
+                                        operation = next((op for op in prop.get('operations', []) 
+                                                    if op.get('prices')), {})
+                                        price = next(iter(operation.get('prices', [])), {}).get('price', 'Consultar')
+                                        
+                                        properties_data.append({
+                                            'title': prop.get('publication_title'),
+                                            'operation': operation.get('operation_type'),
+                                            'price': price,
+                                            'rooms': prop.get('room_amount'),
+                                            'surface': prop.get('total_surface'),
+                                            'expenses': prop.get('expenses'),
+                                            'description': prop.get('description'),
+                                            'image': next((p['image'] for p in prop.get('photos', []) 
+                                                        if p.get('image')), None),
+                                            'link': prop.get('public_url')
+                                        })
+                                    
+                                    tool_outputs.append({
+                                        "tool_call_id": tool_call.id,
+                                        "output": json.dumps({
+                                            "type": "properties",
+                                            "data": properties_data,
+                                            "count": len(properties_data)
+                                        })
+                                    })
+                                else:
+                                    tool_outputs.append({
+                                        "tool_call_id": tool_call.id,
+                                        "output": json.dumps({
+                                            "type": "error",
+                                            "message": "No se encontraron propiedades"
+                                        })
+                                    })
+                        
+                        run = self.client.beta.threads.runs.submit_tool_outputs(
+                            thread_id=self.thread_id,
+                            run_id=run.id,
+                            tool_outputs=tool_outputs
+                        )
                 await asyncio.sleep(1)
 
+            # Get messages
             messages = self.client.beta.threads.messages.list(
                 thread_id=self.thread_id
             )
 
             for msg in messages.data:
                 if msg.role == "assistant":
-                    assistant_response = msg.content[0].text.value
-                    logger.info(f"Assistant response: {assistant_response}")
+                    return {
+                        "type": "text",
+                        "content": msg.content[0].text.value,
+                        "thread_id": self.thread_id  # Add this line
+                    }
 
-                    # Check if we have minimum required info to search
-                    has_minimum_info = all([
-                        self.search_context.get('location'),
-                        self.search_context.get('operation_type'),
-                        self.search_context.get('property_type')
-                    ])
-
-                    logger.info(f"Has minimum info: {has_minimum_info}")
-                    logger.info(f"Current context: {self.search_context}")
-
-                    if has_minimum_info and context_changed:
-                        logger.info("Searching properties with current criteria...")
-                        tokko_results = self.tokko_client.search_properties(self.search_context)
-                        
-                        if not "error" in tokko_results and tokko_results.get('count', 0) > 0:
-                            filtered = tokko_results['properties']
-                            
-                            if filtered:
-                                logger.info(f"Found {len(filtered)} matching properties")
-                                properties_text = [
-                                    self.tokko_client._format_property_with_photos(prop) 
-                                    for prop in filtered[:3]
-                                ]
-                                
-                                return {
-                                    "type": "text",
-                                    "content": (
-                                        f"{assistant_response}\n\n"
-                                        "🏠 **Propiedades Disponibles**\n\n"
-                                        f"{''.join(properties_text)}\n\n"
-                                        "💡 *¿Necesitás más información sobre alguna propiedad?*"
-                                    )
-                                }
-                    
-                    return {"type": "text", "content": assistant_response}
-
-            return {"type": "error", "content": "No se recibió respuesta del asistente"}
+            return {
+                "type": "error",
+                "content": "No se recibió respuesta del asistente",
+                "thread_id": self.thread_id  # Add this line
+            }
 
         except Exception as e:
             logger.error(f"Chat error: {str(e)}", exc_info=True)
             return {
-                "type": "error", 
-                "content": "❌ Lo siento, ocurrió un error. Por favor, intentá nuevamente."
+                "type": "error",
+                "content": "❌ Lo siento, ocurrió un error. Por favor, intentá nuevamente.",
+                "thread_id": self.thread_id  # Add this line
             }
+
+    def search_properties(self, args):
+        search_params = {
+            'location': args.get('location'),
+            'operation_type': args.get('operation_type'),
+            'property_type': args.get('property_type'),
+            # Change exact room match to minimum rooms
+            'min_rooms': args.get('rooms'),  # Instead of 'rooms'
+            'max_price': args.get('max_price')
+        }
 
 # Example usage
 if __name__ == "__main__":
