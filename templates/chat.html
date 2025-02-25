@@ -1,0 +1,21 @@
+<form id="chatForm" onsubmit="handleChatSubmit(event)">
+    <input type="text" id="messageInput" required minlength="1" />
+    <button type="submit">Enviar</button>
+</form>
+
+<script>
+async function handleChatSubmit(event) {
+    event.preventDefault();
+    const input = document.getElementById('messageInput');
+    const message = input.value.trim();
+    
+    try {
+        const response = await handleChat(message);
+        // Handle response...
+        input.value = ''; // Clear input after success
+    } catch (error) {
+        console.error('Chat submission error:', error);
+        // Show error to user...
+    }
+}
+</script>

@@ -3,14 +3,26 @@ import json
 import requests
 import asyncio
 from datetime import datetime
-from openai import OpenAI
+from openai import AsyncOpenAI
 from dotenv import load_dotenv
-from typing import Dict, Optional
+from typing import Dict, Optional, Any  # Added Any to imports
 import logging
+from app.config import settings  # Add settings import
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Enhanced logging configuration
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 logger = logging.getLogger(__name__)
+
+# Add file handler for debugging
+file_handler = logging.FileHandler('assistant_debug.log')
+file_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 # Load environment variables
 load_dotenv()
@@ -94,7 +106,7 @@ class PropertyCache:
             
             # Filter by price
             if matches and search_params.get('max_price'):
-                max_price = search_params['max_price']
+                max_price = search_params.get('max_price')
                 currency = search_params.get('currency', 'USD')
                 
                 # Get property price
@@ -329,84 +341,313 @@ class TokkoClient:
             logger.error(f"Error formatting property: {str(e)}")
             return '<div class="error-message">❌ Error al formatear la propiedad</div>'
 
-class SimpleAssistant:
-    def __init__(self):
-        api_key = os.getenv("OPENAI_API_KEY")
-        if not api_key:
-            raise ValueError("No API key found in environment variables")
-        self.client = OpenAI(api_key=api_key)
-        self.tokko_client = TokkoClient(TOKKO_API_KEY)
-        self.assistant_id = self._create_assistant()
-        self.thread_id = None
-        self.search_context = {
-            'location': None,
-            'operation_type': None,
-            'property_type': None,
-            'rooms': None
-        }
-        logger.info("Real Estate Assistant initialized")
+class OpenAIError(Exception):
+    """Custom exception for OpenAI specific errors"""
+    pass
 
-    def _create_assistant(self) -> str:
-        assistant = self.client.beta.assistants.create(
-            name="Real Estate Assistant",
-            instructions="""Sos un asistente inmobiliario profesional para Altamirano Properties en Argentina.
+class SimpleAssistant:
+    _instance = None
+    _assistant_id = None
+    _threads_cache = {}  # Add thread caching
+    
+    def __init__(self):
+        self.client = settings.openai_client
+        self.tokko_client = TokkoClient()  # Add TokkoClient initialization
+        self.polling_interval = 2.0  # Increased base interval
+        self.max_attempts = 120  # Allow more attempts
+        self.max_threads = 10
+
+    @classmethod
+    async def get_instance(cls) -> 'SimpleAssistant':
+        if not cls._instance:
+            cls._instance = cls()
+            await cls._instance.initialize()
+        return cls._instance
+
+    async def initialize(self) -> None:
+        """Initialize the assistant (only if needed)"""
+        if not self._assistant_id:
+            self._assistant_id = await self._create_assistant()
+            logger.info("Assistant initialized with ID: %s", self._assistant_id)
+
+    async def _create_assistant(self) -> str:
+        try:
+            assistant = await self.client.beta.assistants.create(
+                name="Real Estate Assistant",
+                instructions="""Sos un asistente inmobiliario profesional para Altamirano Properties en Argentina.
 
             COMPORTAMIENTO:
             - Usar español argentino siempre (vos, che, etc.)
             - Ser cordial pero profesional
             - Mantener un tono amigable sin perder formalidad
+            - Mantener CONTEXTO de la conversación
             - NUNCA inventar propiedades
-            - NUNCA decir "un momento" o "estoy buscando"
+            - NUNCA repetir preguntas ya respondidas
+            - NUNCA volver a preguntar información ya proporcionada
             - NUNCA usar "tú" o expresiones españolas
 
-            RECOLECCIÓN DE INFO (EN ORDEN):
-            1. Primero preguntar zona si no la menciona
-            2. Después preguntar si busca alquilar o comprar
-            3. Después qué tipo de propiedad:
-               - Depto
-               - Casa
-               - Local
-               - Oficina
-               - PH
-            4. Después cantidad de ambientes
-            5. Por último, presupuesto (opcional)
+            MANEJO DE CONTEXTO:
+            - Si el usuario menciona "alquilar/alquiler" → operation_type = "Rent"
+            - Si menciona "comprar/compra/venta" → operation_type = "Sale"
+            - Si dice "depto/departamento" → property_type = "Apartment"
+            - Si dice "casa" → property_type = "House"
+            - Si dice "local" → property_type = "Local"
+            - Si dice "oficina" → property_type = "Office"
+            - Números mencionados pueden ser ambientes o precios según contexto
+            
+            PROCESO DE BÚSQUEDA:
+            1. Recolectar información faltante en orden natural
+            2. Una vez tengas location + operation_type + property_type → hacer búsqueda
+            3. Si menciona ambientes, usar como filtro adicional
+            4. Si menciona precio, usar como máximo
 
-            EJEMPLOS DE DIÁLOGO:
-            Usuario: "en ballester"
-            Asistente: "¿Estás buscando para alquilar o comprar en Villa Ballester?"
-            
-            Usuario: "alquilar"
-            Asistente: "¿Qué tipo de propiedad te interesa? (depto, casa, local, etc.)"
-            
-            Usuario: "un depto"
-            Asistente: "¿Cuántos ambientes necesitás?"
+            EJEMPLOS DE DIÁLOGO NATURAL:
+            Usuario: "busco alquilar un depto en ballester"
+            → Entender: operation_type="Rent", property_type="Apartment", location="Villa Ballester"
+            → Preguntar: "¿Cuántos ambientes necesitás?"
+
+            Usuario: "depto 2 ambientes en ballester"
+            → Entender: property_type="Apartment", rooms=2, location="Villa Ballester"
+            → Preguntar: "¿Estás buscando para alquilar o comprar?"
+
+            ZONAS CONOCIDAS:
+            - "ballester" = "Villa Ballester"
+            - "malaver" = "Villa Malaver"
+            - "chilavert" = "Chilavert"
+            - "suarez" = "José León Suárez"
+            - "san martin" = "San Martín"
 
             TÉRMINOS ARGENTINOS:
-            - Usar "depto" o "departamento"
-            - "Ambientes" (no "habitaciones" ni "dormitorios")
-            - "Expensas" para gastos comunes
-            - "Cochera" (no "estacionamiento" ni "parking")
-            - "PH" para Propiedad Horizontal""",
-            model="gpt-3.5-turbo",
-            tools=[{
-                "type": "function",
-                "function": {
-                    "name": "search_properties",
-                    "description": "Search for properties based on criteria",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "location": {"type": "string"},
-                            "operation_type": {"type": "string", "enum": ["Rent", "Sale"]},
-                            "property_type": {"type": "string", "enum": ["Apartment", "House", "Office", "Local"]},
-                            "rooms": {"type": "integer", "minimum": 1},
-                            "max_price": {"type": "number"}
+            - "depto/departamento" = Apartment
+            - "ambientes" = rooms
+            - "expensas" = gastos comunes
+            - "cochera" = parking
+            - "PH" = tipo especial de departamento""",
+                model="gpt-3.5-turbo",
+                tools=[{
+                    "type": "function",
+                    "function": {
+                        "name": "search_properties",
+                        "description": "Search for properties based on criteria",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "location": {"type": "string"},
+                                "operation_type": {"type": "string", "enum": ["Rent", "Sale"]},
+                                "property_type": {"type": "string", "enum": ["Apartment", "House", "Office", "Local"]},
+                                "rooms": {"type": "integer", "minimum": 1},
+                                "max_price": {"type": "number"}
+                            },
+                            "required": ["location", "operation_type", "property_type"]
                         }
                     }
-                }
-            }]
-        )
-        return assistant.id
+                }]
+            )
+            return assistant.id
+        except Exception as e:
+            logger.error("Failed to create assistant: %s", str(e))
+            raise
+
+    async def _get_or_create_thread(self) -> str:
+        """Create a new thread or clean up old ones"""
+        try:
+            # Cleanup old threads if needed
+            if len(self._threads_cache) >= self.max_threads:
+                oldest_thread = min(self._threads_cache.items(), key=lambda x: x[1])[0]
+                self._threads_cache.pop(oldest_thread)
+            
+            # Create new thread
+            thread = await self.client.beta.threads.create()
+            self._threads_cache[thread.id] = datetime.now()
+            return thread.id
+            
+        except Exception as e:
+            logger.error("Thread creation failed: %s", str(e))
+            raise OpenAIError(f"Failed to create thread: {str(e)}")
+
+    async def chat(self, message: str, thread_id: str = None) -> dict:
+        try:
+            current_thread = thread_id or await self._get_or_create_thread()
+            
+            logger.info("=== Chat Session ===")
+            logger.info(f"Thread ID: {current_thread}")
+            logger.info(f"User Message: {message}")
+
+            # Add message to thread
+            await self.client.beta.threads.messages.create(
+                thread_id=current_thread,
+                role="user",
+                content=message
+            )
+
+            # Create run
+            run = await self.client.beta.threads.runs.create(
+                thread_id=current_thread,
+                assistant_id=self._assistant_id
+            )
+            
+            logger.info(f"Run ID: {run.id}")
+
+            attempts = 0
+            while attempts < self.max_attempts:
+                try:
+                    status = await self.client.beta.threads.runs.retrieve(
+                        thread_id=current_thread,
+                        run_id=run.id
+                    )
+                    
+                    if status.status == "completed":
+                        messages = await self.client.beta.threads.messages.list(
+                            thread_id=current_thread,
+                            limit=10
+                        )
+                        
+                        response = {
+                            "content": messages.data[0].content[0].text.value,
+                            "thread_id": current_thread,
+                            "status": status.status
+                        }
+                        
+                        return response
+
+                    if status.status in ["failed", "cancelled", "expired"]:
+                        error_msg = f"OpenAI run {status.status}"
+                        if hasattr(status, 'last_error'):
+                            error_msg += f": {status.last_error}"
+                        logger.error(error_msg)
+                        raise OpenAIError(error_msg)
+
+                    if status.status == "requires_action":
+                        logger.info("Run requires action - checking tool calls")
+                        tool_outputs = await self._handle_tool_calls(status, current_thread, run.id)
+                        logger.info(f"Tool outputs: {json.dumps(tool_outputs, indent=2)}")
+                        
+                        # Include function output in response
+                        if tool_outputs:
+                            response = {
+                                "content": "",  # Will be updated with final message
+                                "thread_id": current_thread,
+                                "status": status.status,
+                                "function_output": tool_outputs[0]["output"]
+                            }
+                            return response
+
+                    await asyncio.sleep(self.polling_interval)
+                    attempts += 1
+
+                except Exception as e:
+                    if "429" in str(e):
+                        logger.warning("Rate limit hit, waiting...")
+                        await asyncio.sleep(5)
+                        continue
+                    raise
+
+            raise OpenAIError("OpenAI request timed out")
+
+        except Exception as e:
+            logger.error(f"Chat error: {str(e)}")
+            raise
+
+    async def _handle_tool_calls(self, run_status, thread_id: str, run_id: str) -> list:
+        """Handle tool calls from the assistant"""
+        tool_outputs = []
+        
+        for tool_call in run_status.required_action.submit_tool_outputs.tool_calls:
+            try:
+                logger.info(f"Processing tool call: {tool_call.function.name}")
+                
+                if tool_call.function.name == "search_properties":
+                    # Parse the arguments
+                    args = json.loads(tool_call.function.arguments)
+                    logger.info(f"Search parameters: {args}")
+                    
+                    # Map the parameters correctly for Tokko API
+                    search_params = {
+                        'location': args.get('location'),
+                        'operation_type': args.get('operation_type'),
+                        'property_type': args.get('property_type'),
+                        'min_rooms': args.get('rooms'),
+                        'max_price': args.get('max_price')
+                    }
+                    
+                    logger.info(f"Searching with params: {search_params}")
+                    
+                    # Execute the search
+                    search_results = self.tokko_client.search_properties(search_params)
+                    
+                    if "error" in search_results:
+                        logger.error(f"Search error: {search_results['error']}")
+                        output = {
+                            "type": "error",
+                            "message": search_results["error"]
+                        }
+                    else:
+                        properties = search_results.get("properties", [])
+                        formatted_properties = []
+                        
+                        for prop in properties:
+                            # Get operation details
+                            operation = next((op for op in prop.get('operations', []) 
+                                            if op.get('prices')), {})
+                            
+                            # Format price
+                            price_info = "Consultar"
+                            if operation and operation.get('prices'):
+                                price = operation['prices'][0]
+                                price_info = f"{price.get('currency', 'ARS')} {price.get('price', 'Consultar'):,}"
+                            
+                            # Format property
+                            formatted_prop = {
+                                "title": prop.get('publication_title', 'Propiedad'),
+                                "address": prop.get('fake_address', 'Consultar dirección'),
+                                "operation_type": operation.get('operation_type', 'N/D'),
+                                "property_type": prop.get('type', {}).get('name', 'N/D'),
+                                "price": price_info,
+                                "rooms": prop.get('room_amount', 'N/D'),
+                                "surface": f"{prop.get('total_surface', 'N/D')} m²",
+                                "expenses": f"ARS {prop.get('expenses', 0):,}",
+                                "description": prop.get('description', '').strip(),
+                                "image_url": next((p['image'] for p in prop.get('photos', []) 
+                                                 if p.get('image')), None),
+                                "url": prop.get('public_url', '')
+                            }
+                            formatted_properties.append(formatted_prop)
+                        
+                        logger.info(f"Found {len(formatted_properties)} properties")
+                        output = {
+                            "type": "properties",
+                            "data": formatted_properties,
+                            "count": len(formatted_properties)
+                        }
+                    
+                    tool_outputs.append({
+                        "tool_call_id": tool_call.id,
+                        "output": json.dumps(output, ensure_ascii=False)
+                    })
+                    
+                else:
+                    logger.warning(f"Unknown function call: {tool_call.function.name}")
+                    tool_outputs.append({
+                        "tool_call_id": tool_call.id,
+                        "output": json.dumps({"error": "Función no implementada"})
+                    })
+            
+            except Exception as e:
+                logger.error(f"Error processing tool call: {str(e)}")
+                tool_outputs.append({
+                    "tool_call_id": tool_call.id,
+                    "output": json.dumps({"error": str(e)})
+                })
+        
+        # Submit all tool outputs
+        if tool_outputs:
+            await self.client.beta.threads.runs.submit_tool_outputs(
+                thread_id=thread_id,
+                run_id=run_id,
+                tool_outputs=tool_outputs
+            )
+        
+        return tool_outputs
 
     def format_property_response(self, properties: list) -> str:
         """Format properties into a structured markdown response."""
@@ -448,120 +689,6 @@ class SimpleAssistant:
         # Join all properties with double newlines for better readability
         return "\n\n".join(formatted)
 
-    async def chat(self, message: str, thread_id: Optional[str] = None) -> Dict:
-        try:
-            logger.info("=== New Chat Message ===")
-            logger.info(f"User message: {message}")
-
-            # Use provided thread_id or create new one
-            if thread_id:
-                self.thread_id = thread_id
-            elif not self.thread_id:
-                thread = self.client.beta.threads.create()
-                self.thread_id = thread.id
-                logger.info(f"Created new thread: {self.thread_id}")
-
-            # Add message to thread
-            self.client.beta.threads.messages.create(
-                thread_id=self.thread_id,
-                role="user",
-                content=message
-            )
-
-            # Run assistant
-            run = self.client.beta.threads.runs.create(
-                thread_id=self.thread_id,
-                assistant_id=self.assistant_id
-            )
-
-            # Wait for completion
-            while True:
-                run = self.client.beta.threads.runs.retrieve(
-                    thread_id=self.thread_id,
-                    run_id=run.id
-                )
-                if run.status == 'completed':
-                    break
-                elif run.status == 'requires_action':
-                    # Handle function calls
-                    if run.required_action.type == 'submit_tool_outputs':
-                        tool_outputs = []
-                        for tool_call in run.required_action.submit_tool_outputs.tool_calls:
-                            if tool_call.function.name == 'search_properties':
-                                args = json.loads(tool_call.function.arguments)
-                                results = self.tokko_client.search_properties(args)
-                                
-                                if results.get('properties'):
-                                    properties_data = []
-                                    for prop in results['properties']:
-                                        operation = next((op for op in prop.get('operations', []) 
-                                                    if op.get('prices')), {})
-                                        price = next(iter(operation.get('prices', [])), {}).get('price', 'Consultar')
-                                        
-                                        properties_data.append({
-                                            'title': prop.get('publication_title'),
-                                            'operation': operation.get('operation_type'),
-                                            'price': price,
-                                            'rooms': prop.get('room_amount'),
-                                            'surface': prop.get('total_surface'),
-                                            'expenses': prop.get('expenses'),
-                                            'description': prop.get('description'),
-                                            'image': next((p['image'] for p in prop.get('photos', []) 
-                                                        if p.get('image')), None),
-                                            'link': prop.get('public_url')
-                                        })
-                                    
-                                    tool_outputs.append({
-                                        "tool_call_id": tool_call.id,
-                                        "output": json.dumps({
-                                            "type": "properties",
-                                            "data": properties_data,
-                                            "count": len(properties_data)
-                                        })
-                                    })
-                                else:
-                                    tool_outputs.append({
-                                        "tool_call_id": tool_call.id,
-                                        "output": json.dumps({
-                                            "type": "error",
-                                            "message": "No se encontraron propiedades"
-                                        })
-                                    })
-                        
-                        run = self.client.beta.threads.runs.submit_tool_outputs(
-                            thread_id=self.thread_id,
-                            run_id=run.id,
-                            tool_outputs=tool_outputs
-                        )
-                await asyncio.sleep(1)
-
-            # Get messages
-            messages = self.client.beta.threads.messages.list(
-                thread_id=self.thread_id
-            )
-
-            for msg in messages.data:
-                if msg.role == "assistant":
-                    return {
-                        "type": "text",
-                        "content": msg.content[0].text.value,
-                        "thread_id": self.thread_id  # Add this line
-                    }
-
-            return {
-                "type": "error",
-                "content": "No se recibió respuesta del asistente",
-                "thread_id": self.thread_id  # Add this line
-            }
-
-        except Exception as e:
-            logger.error(f"Chat error: {str(e)}", exc_info=True)
-            return {
-                "type": "error",
-                "content": "❌ Lo siento, ocurrió un error. Por favor, intentá nuevamente.",
-                "thread_id": self.thread_id  # Add this line
-            }
-
     def search_properties(self, args):
         search_params = {
             'location': args.get('location'),
@@ -571,6 +698,9 @@ class SimpleAssistant:
             'min_rooms': args.get('rooms'),  # Instead of 'rooms'
             'max_price': args.get('max_price')
         }
+
+# Add to top of file if not already present
+__all__ = ['SimpleAssistant', 'OpenAIError']
 
 # Example usage
 if __name__ == "__main__":

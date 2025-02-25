@@ -1,7 +1,12 @@
 .git
 .gitignore
 .env
-__pycache__/
 *.pyc
-venv/
+__pycache__/
+.pytest_cache/
+.coverage
+.venv/
 .vscode/
+tests/
+*.log
+README.md

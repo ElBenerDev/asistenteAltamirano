@@ -19,27 +19,31 @@ import uvicorn
 import signal
 import sys
 from contextlib import asynccontextmanager
+import traceback
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Update the lifespan manager to be more robust
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
-    settings.initialize_openai()
-    yield
-    # Shutdown
-    if settings.openai_client:
-        await settings.openai_client.close()
+    try:
+        logger.info("Starting application...")
+        await settings.initialize_openai()
+        await settings.initialize_tokko()  # Now properly defined
+        yield
+    finally:
+        logger.info("Application shutdown")
 
 # Initialize FastAPI
 app = FastAPI(
     title=settings.app_name,
-    docs_url=None if os.getenv("PRODUCTION") else "/docs",
-    redoc_url=None if os.getenv("PRODUCTION") else "/redoc",
-    openapi_url=None if os.getenv("PRODUCTION") else "/openapi.json",
-    lifespan=lifespan
+    lifespan=lifespan,
+    root_path="",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json"
 )
 
 app.add_middleware(ServerErrorMiddleware)
@@ -49,7 +53,7 @@ app.add_middleware(ServerErrorMiddleware)
 # Update CORS middleware with specific origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Temporarily allow all origins for testing
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -67,24 +71,60 @@ async def add_security_headers(request: Request, call_next):
         logger.error(f"Error processing request: {str(e)}")
         raise
 
-# Verify static directory exists
-static_dir = os.path.join(os.path.dirname(__file__), "static")
-if not os.path.exists(static_dir):
-    os.makedirs(static_dir)
+# Add request logging middleware
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.info(f"Request: {request.method} {request.url}")
+    try:
+        response = await call_next(request)
+        logger.info(f"Response status: {response.status_code}")
+        return response
+    except Exception as e:
+        logger.error(f"Request error: {e}")
+        raise
+
+# Get the absolute path to the static and templates directories
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+static_dir = os.path.join(BASE_DIR, "static")
+templates_dir = os.path.join(BASE_DIR, "templates")
+
+# Ensure directories exist
+os.makedirs(static_dir, exist_ok=True)
+os.makedirs(templates_dir, exist_ok=True)
 
 # Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+templates = Jinja2Templates(directory=templates_dir)
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     try:
-        return templates.TemplateResponse(
-            "index.html",
-            {"request": request}
-        )
+        logger.info(f"Processing home request from {request.client.host}")
+        logger.info(f"Template directory: {templates_dir}")
+        templates_list = os.listdir(templates_dir)
+        logger.info(f"Available templates: {templates_list}")
+        
+        # Try loading index.html first
+        try:
+            response = templates.TemplateResponse(
+                "index.html",
+                {"request": request}
+            )
+            logger.info("index.html template rendered successfully")
+            return response
+        except Exception as e:
+            logger.warning(f"Failed to render index.html: {e}, falling back to base.html")
+            # Fall back to base template
+            return templates.TemplateResponse(
+                "base.html",
+                {
+                    "request": request,
+                    "title": "Asistente Altamirano - Servicio Activo"
+                }
+            )
     except Exception as e:
-        logger.error(f"Error rendering index: {str(e)}")
+        logger.error(f"Error in home endpoint: {str(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=str(e))
 
 class ChatMessage(BaseModel):
@@ -121,11 +161,26 @@ async def chat(request: Request):
 
 @app.get("/health")
 async def health_check():
-    return {
-        "status": "healthy",
-        "timestamp": datetime.utcnow().isoformat(),
-        "port": os.getenv("PORT", "8080")
-    }
+    """Health check endpoint for Cloud Run"""
+    try:
+        # Verify critical services are initialized
+        if not hasattr(settings, 'openai_client'):
+            raise Exception("OpenAI client not initialized")
+        if not hasattr(settings, 'tokko_client'):
+            raise Exception("Tokko client not initialized")
+            
+        return {
+            "status": "healthy",
+            "timestamp": datetime.utcnow().isoformat(),
+            "version": os.getenv("K_REVISION", "local"),
+            "services": {
+                "openai": "initialized" if settings.openai_client else "not initialized",
+                "tokko": "initialized" if settings.tokko_client else "not initialized"
+            }
+        }
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/properties")
 async def get_properties(
@@ -149,6 +204,26 @@ async def get_properties(
         }
     except Exception as e:
         logger.error(f"Error fetching properties: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/debug")
+async def debug():
+    """Debug endpoint to check application state"""
+    try:
+        return {
+            "env": {k: v for k, v in os.environ.items() if not k.lower().contains('key')},
+            "directories": {
+                "base": BASE_DIR,
+                "templates": os.listdir(templates_dir),
+                "static": os.listdir(static_dir)
+            },
+            "clients": {
+                "openai": hasattr(settings, 'openai_client'),
+                "tokko": hasattr(settings, 'tokko_client')
+            }
+        }
+    except Exception as e:
+        logger.error(f"Debug endpoint error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.exception_handler(500)
@@ -178,16 +253,24 @@ async def favicon():
 
 def handle_exit(signum, frame):
     logger.info(f"Received signal {signum}")
-    sys.exit(0)
+    # Graceful shutdown
+    try:
+        if hasattr(settings, 'openai_client'):
+            settings.openai_client.aclose()
+        logger.info("Cleanup complete")
+    except Exception as e:
+        logger.error(f"Error during shutdown: {e}")
+    finally:
+        sys.exit(0)
 
+# Update main execution block
 if __name__ == "__main__":
+    import uvicorn
+    
     port = int(os.getenv("PORT", "8080"))
+    
     uvicorn.run(
-        app, 
-        host="0.0.0.0", 
-        port=port, 
-        log_level="info",
-        reload=False,
-        workers=1
+        app,
+        host="0.0.0.0",
+        port=port
     )
-

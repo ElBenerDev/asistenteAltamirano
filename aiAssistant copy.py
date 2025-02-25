@@ -328,13 +328,10 @@ class TokkoClient:
             return '<div class="error-message">❌ Error al formatear la propiedad</div>'
 
 class SimpleAssistant:
-    def __init__(self):
-        api_key = os.getenv("OPENAI_API_KEY")
-        if not api_key:
-            raise ValueError("No API key found in environment variables")
-        self.client = OpenAI(api_key=api_key)
-        self.tokko_client = TokkoClient(TOKKO_API_KEY)
-        self.assistant_id = self._create_assistant()
+    async def __init__(self):
+        self.client = settings.openai_client
+        self.tokko_client = settings.tokko_client
+        self.assistant_id = await self._create_assistant()
         self.thread_id = None
         self.search_context = {
             'location': None,
@@ -344,8 +341,8 @@ class SimpleAssistant:
         }
         logger.info("Real Estate Assistant initialized")
 
-    def _create_assistant(self) -> str:
-        assistant = self.client.beta.assistants.create(
+    async def _create_assistant(self) -> str:
+        assistant = await self.client.beta.assistants.create(
             name="Real Estate Assistant",
             instructions="""Sos un asistente inmobiliario profesional para Altamirano Properties en Argentina.
 

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Inmobiliario Altamirano</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="text-center">
+                <i class="fas fa-building"></i>
+                Altamirano Propiedades
+            </h1>
+            <p class="text-center text-light mb-0">Tu asistente inmobiliario personal</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="chat-container">
+            <div id="chat-box" class="chat-messages"></div>
+            
+            <div class="input-group">
+                <input type="text" 
+                       id="message-input" 
+                       class="form-control" 
+                       placeholder="¿Qué tipo de propiedad estás buscando?"
+                       autocomplete="off">
+                <button id="send-button" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Property template remains the same -->
+        <template id="property-template">
+            <div class="property-card">
+                <div class="property-image-container">
+                    <img class="property-image" src="" alt="Propiedad">
+                    <div class="property-price-tag"></div>
+                </div>
+                <div class="property-content">
+                    <h3 class="property-title"></h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span class="address"></span>
+                    </div>
+                    <div class="property-features">
+                        <div class="feature-item">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span class="surface"></span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-bed"></i>
+                            <span class="rooms"></span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-bath"></i>
+                            <span class="bathrooms"></span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-car"></i>
+                            <span class="parking"></span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-building"></i>
+                            <span class="expenses"></span>
+                        </div>
+                    </div>
+                    <div class="property-description"></div>
+                    <a href="#" class="property-button" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        Ver más detalles
+                    </a>
+                </div>
+            </div>
+        </template>
+    </main>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', path='js/chat.js') }}"></script>
+</body>
+</html>

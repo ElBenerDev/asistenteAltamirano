@@ -5,6 +5,8 @@
 .env.production
 .env.development
 .env.local
+.venv
+env/
 venv/
 ENV/
 
@@ -12,6 +14,7 @@ ENV/
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 
 # IDE
 .vscode/
@@ -29,3 +32,7 @@ Thumbs.db
 # Additional security measures
 *.pem
 *.key
+
+.pytest_cache/
+.coverage
+.env.yaml

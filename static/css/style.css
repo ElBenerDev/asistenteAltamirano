@@ -29,76 +29,132 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Update chat container styling */
 .chat-container {
-    max-width: 1000px;
+    max-width: 800px;
     height: calc(100vh - 250px);
     overflow-y: auto;
-    padding: 2rem;
+    padding: 20px;
     background: var(--chat-bg);
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+}
+
+/* Update message container */
+.messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Update chat form */
+.chat-form {
+    display: flex;
+    gap: 10px;
+    padding: 1rem;
+    background: white;
+    border-top: 1px solid var(--border-color);
+}
+
+.message-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.message-input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+}
+
+.send-button {
+    padding: 0.75rem 1.5rem;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.send-button:hover {
+    background: var(--primary-color);
+    transform: translateY(-1px);
 }
 
 .chat-box {
     height: 400px;
     overflow-y: auto;
-    border: 1px solid #ddd;
+    border: 1px solid #eee;
     padding: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     border-radius: 4px;
 }
 
-/* Message Styling */
+/* Update message styling */
 .message {
-    margin: 10px;
+    margin: 5px;
     padding: 10px;
     border-radius: 8px;
-    max-width: 80%;
+    max-width: 70%;
     word-wrap: break-word;
-    width: fit-content;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: fadeIn 0.3s ease;
 }
 
 .user-message {
-    background-color: #007bff;
+    background: var(--message-user-bg);
     color: white;
     margin-left: auto;
-    border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 4px;
+    align-self: flex-end;
+    background-color: #007bff;
 }
 
 .assistant-message {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    color: black;
+    background: var(--message-assistant-bg);
+    border: 1px solid var(--border-color);
     margin-right: auto;
-    border-bottom-left-radius: 5px;
+    border-bottom-left-radius: 4px;
+    align-self: flex-start;
+    background-color: #e9ecef;
 }
 
 .error-message {
     background-color: #dc3545;
     color: white;
     margin-right: auto;
+    align-self: center;
 }
 
-/* Property Card Styling */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Remove duplicate property-card styles and consolidate them */
 .property-card {
     background: white;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-    padding: 1.5rem;
-    margin: 1rem 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
     border: 1px solid var(--border-color);
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-    margin-bottom: 1.5rem;
+    margin: 0;  /* Override margin for chat messages */
 }
 
 .property-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
 
 .property-header {
@@ -126,6 +182,7 @@ body {
     padding: 0.75rem;
     border-radius: 8px;
     margin-bottom: 1rem;
+    color: #666;
 }
 
 .property-details {
@@ -136,12 +193,16 @@ body {
     padding: 1rem;
     background: var(--background-color);
     border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    background: #f8f9fa;
 }
 
 .detail-item {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    color: #555;
 }
 
 .property-photos {
@@ -173,6 +234,8 @@ body {
     margin: 1rem 0;
     color: var(--text-color);
     line-height: 1.5;
+    color: #666;
+    font-size: 0.9rem;
 }
 
 .property-link {
@@ -210,7 +273,7 @@ body {
 
 .property-image {
     position: relative;
-    height: 220px;
+    height: 200px;
     overflow: hidden;
     background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
 }
@@ -290,7 +353,7 @@ body {
     text-decoration: none;
     border-radius: 6px;
     margin-top: 1rem;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 .property-button:hover {
@@ -402,6 +465,11 @@ body {
     background-color: #0056b3;
 }
 
+#send-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 .property-image-container {
     position: relative;
     height: 200px;
@@ -429,6 +497,7 @@ body {
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
+    margin: 0;
 }
 
 .price {
@@ -468,4 +537,121 @@ body {
 .price-tag {
     background: rgba(0, 0, 0, 0.8);
     color: white;
+}
+
+/* Add properties grid styling */
+.properties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 15px;
+    width: 100%;
+}
+
+.property-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+}
+
+.property-image {
+    position: relative;
+    height: 200px;
+}
+
+.property-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.price-tag {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.property-info {
+    padding: 15px;
+}
+
+.property-info h3 {
+    margin: 0 0 10px;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.features {
+    display: flex;
+    gap: 15px;
+    margin: 10px 0;
+    color: #666;
+}
+
+.description {
+    margin: 10px 0;
+    color: #666;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.property-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.property-link:hover {
+    background: #0056b3;
+}
+
+/* Update message styling for property cards */
+.message.assistant-message .properties-grid {
+    max-width: 100%;
+    background: transparent;
+    padding: 0;
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Property grid in messages */
+.message.assistant-message .properties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 100%;
+    background: transparent;
+    padding: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .properties-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .property-features {
+        flex-direction: column;
+    }
 }
