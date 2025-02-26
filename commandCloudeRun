@@ -1,0 +1,2 @@
+gcloud run deploy asistente-altamirano --source . --region us-central1
+uvicorn app.main:app --reload --log-level debug

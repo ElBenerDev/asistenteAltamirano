@@ -1,4 +1,5 @@
 import aiohttp
+import json
 import logging
 from typing import Any, Dict, List, Optional
 from app.config.settings import settings
@@ -7,6 +8,39 @@ from .cache import PropertyCache
 logger = logging.getLogger(__name__)
 
 class TokkoClient:
+    # Complete property type mapping from API analysis
+    PROPERTY_TYPE_MAP = {
+        "Apartment": "2",   # AP
+        "House": "3",       # HO
+        "Land": "1",        # LA
+        "Garage": "10",     # GA
+        "Industrial Ship": "12",  # IS
+        "Bussiness Premises": "7",  # LO
+        "Condo": "13",      # PH
+        # Add Spanish variations
+        "Departamento": "2",
+        "Casa": "3",
+        "Terreno": "1",
+        "Cochera": "10",
+        "Nave Industrial": "12",
+        "Local": "7",
+        "PH": "13"
+    }
+
+    # Complete operation type mapping from API analysis
+    OPERATION_TYPE_MAP = {
+        "Rent": "1",
+        "Sale": "2",
+        # Spanish variations
+        "Alquiler": "1",
+        "Venta": "2",
+        # Additional variations
+        "rent": "1",
+        "sale": "2",
+        "alquiler": "1",
+        "venta": "2"
+    }
+
     def __init__(self):
         self.api_key = settings.tokko_api_key
         # Set default base URL if not configured
@@ -14,32 +48,70 @@ class TokkoClient:
         self._cache = {}
         logger.info(f"Tokko client initialized with base_url: {self.base_url}")
 
-    async def search_properties(self, location: str, rooms: Optional[int] = None, max_price: Optional[float] = None) -> List[Dict]:
+    async def search_properties(self, location: str, operation_type: str = None, property_type: str = None, rooms: Optional[int] = None, max_price: Optional[float] = None) -> List[Dict]:
         try:
+            # Base parameters
             params = {
-                "key": self.api_key,
-                "location": location,
-                "operation_type": "1",  # For rent
-                "status": "ACTIVE"
+                "key": self.api_key.get_secret_value(),
+                "limit": "0",
+                "format": "json"
             }
-            
-            if rooms:
-                params["rooms"] = rooms
-            if max_price:
-                params["price_max"] = max_price
 
-            logger.info(f"Searching properties with params: {params}")
-            
+            # Build filters dictionary
+            filters = {}  # Remove "status": ["ACTIVE"] as it might be interfering
+
+            # Add location if provided
+            if location:
+                filters["locations"] = [location.strip()]  # Changed to array of locations
+
+            # Handle operation type
+            if operation_type:
+                op_id = self.OPERATION_TYPE_MAP.get(operation_type.lower())
+                if op_id:
+                    # Changed to use operation_id instead of operation_types
+                    filters["operation_id"] = op_id
+                    logger.info(f"Added operation filter: {operation_type} (ID: {op_id})")
+
+            # Handle property type
+            if property_type:
+                type_id = self.PROPERTY_TYPE_MAP.get(property_type)
+                if type_id:
+                    # Changed to use type_id instead of property_types
+                    filters["type_id"] = type_id
+                    logger.info(f"Added property type filter: {property_type} (ID: {type_id})")
+
+            # Add room filter
+            if rooms:
+                filters["room_amount"] = str(rooms)
+
+            # Add price filter
+            if max_price:
+                filters["price_max"] = str(max_price)
+
+            # Add filters to params
+            params["filters"] = json.dumps(filters)
+            logger.info(f"Final search params: {params}")
+            logger.info(f"Final filters: {filters}")
+
             async with aiohttp.ClientSession() as session:
-                async with session.get(f"{self.base_url}/property/search", params=params) as response:
+                url = f"{self.base_url}/property/"  # Changed back to base property endpoint
+                logger.info(f"Making request to: {url}")
+
+                async with session.get(url, params=params) as response:
+                    logger.info(f"Full request URL: {response.url}")
+                    
                     if response.status != 200:
                         error_text = await response.text()
                         logger.error(f"Tokko API error: {error_text}")
                         return []
-                    
+
                     data = await response.json()
-                    logger.info(f"Found {len(data.get('objects', []))} properties")
-                    return data.get("objects", [])
+                    logger.debug(f"Raw API response: {json.dumps(data)[:500]}...")
+
+                    properties = data.get('objects', [])
+                    logger.info(f"Found {len(properties)} properties")
+
+                    return properties
 
         except Exception as e:
             logger.error(f"Error searching properties: {str(e)}", exc_info=True)

@@ -1,0 +1,759 @@
+{
+  "total_properties": 149,
+  "property_types": [
+    {
+      "code": "AP",
+      "id": 2,
+      "name": "Apartment"
+    },
+    {
+      "code": "GA",
+      "id": 10,
+      "name": "Garage"
+    },
+    {
+      "code": "HO",
+      "id": 3,
+      "name": "House"
+    },
+    {
+      "code": "IS",
+      "id": 12,
+      "name": "Industrial Ship"
+    },
+    {
+      "code": "LA",
+      "id": 1,
+      "name": "Land"
+    },
+    {
+      "code": "LO",
+      "id": 7,
+      "name": "Bussiness Premises"
+    },
+    {
+      "code": "PH",
+      "id": 13,
+      "name": "Condo"
+    }
+  ],
+  "operation_types": [
+    "Rent",
+    "Sale"
+  ],
+  "locations": [
+    "Chilavert",
+    "General San Martin",
+    "Jose León Suarez",
+    "Loma Hermosa",
+    "Malaver",
+    "S.Martin(Ctro)",
+    "San Andrés",
+    "San Martin",
+    "Villa Ballester"
+  ],
+  "available_fields": [
+    "address",
+    "age",
+    "bathroom_amount",
+    "branch",
+    "created_at",
+    "custom1",
+    "custom_tags",
+    "deleted_at",
+    "depth_measure",
+    "description",
+    "description_only",
+    "development",
+    "development_excel_extra_data",
+    "disposition",
+    "expenses",
+    "extra_attributes",
+    "fake_address",
+    "files",
+    "floors_amount",
+    "footer",
+    "front_measure",
+    "geo_lat",
+    "geo_long",
+    "gm_location_type",
+    "has_temporary_rent",
+    "id",
+    "is_denounced",
+    "is_starred_on_web",
+    "legally_checked",
+    "location",
+    "occupation",
+    "operations",
+    "orientation",
+    "parking_lot_amount",
+    "photos",
+    "producer",
+    "property_condition",
+    "public_url",
+    "publication_title",
+    "real_address",
+    "reference_code",
+    "rich_description",
+    "roofed_surface",
+    "room_amount",
+    "semiroofed_surface",
+    "situation",
+    "status",
+    "suite_amount",
+    "surface",
+    "surface_measurement",
+    "tags",
+    "toilet_amount",
+    "total_surface",
+    "transaction_requirements",
+    "type",
+    "unroofed_surface",
+    "videos",
+    "web_price",
+    "zonification"
+  ],
+  "sample_properties": [
+    {
+      "address": "Lavalle al 1900 entre Sarmiento e Italia",
+      "age": 30,
+      "bathroom_amount": 1,
+      "branch": null,
+      "created_at": "2014-05-12T20:49:17",
+      "custom1": "0.00",
+      "custom_tags": [],
+      "deleted_at": "2025-01-24T12:32:27",
+      "depth_measure": "0.00",
+      "description": "\n\nCódigo de propiedad: ( AAP37816)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+      "description_only": "",
+      "development": null,
+      "development_excel_extra_data": "[]",
+      "disposition": "Front",
+      "expenses": 60000,
+      "extra_attributes": [],
+      "fake_address": "Lavalle al 1900 entre Sarmiento e Italia",
+      "files": [],
+      "floors_amount": 1,
+      "footer": "Código de propiedad: ( AAP37816)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+      "front_measure": "0.00",
+      "geo_lat": "-34.5430389312",
+      "geo_long": "-58.5489995184",
+      "gm_location_type": "BY_HAND",
+      "has_temporary_rent": false,
+      "id": 37816,
+      "is_denounced": false,
+      "is_starred_on_web": true,
+      "legally_checked": "Unknown",
+      "location": {
+        "divisions": [
+          {
+            "id": 25035,
+            "name": "Chilavert",
+            "resource_uri": "/api/v1/location/25035/"
+          },
+          {
+            "id": 25036,
+            "name": "Malaver",
+            "resource_uri": "/api/v1/location/25036/"
+          },
+          {
+            "id": 25037,
+            "name": "V.Zagala",
+            "resource_uri": "/api/v1/location/25037/"
+          }
+        ],
+        "full_location": "Argentina | G.B.A. Zona Norte | General San Martin | Villa Ballester",
+        "id": 25034,
+        "name": "Villa Ballester",
+        "parent_division": "/api/v1/location/25013/",
+        "short_location": "G.B.A. Zona Norte | General San Martin | Villa Ballester",
+        "state": null,
+        "weight": 7615
+      },
+      "occupation": [],
+      "operations": [
+        {
+          "operation_id": 1,
+          "operation_type": "Sale",
+          "prices": [
+            {
+              "currency": "USD",
+              "period": 0,
+              "price": 48000
+            }
+          ]
+        }
+      ],
+      "orientation": "North-East",
+      "parking_lot_amount": 0,
+      "photos": [
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_113499480060805290429024444325117114980516586068023152054082175533140229539500.jpg",
+          "is_blueprint": false,
+          "is_front_cover": true,
+          "order": 1,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_113499480060805290429024444325117114980516586068023152054082175533140229539500.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_113499480060805290429024444325117114980516586068023152054082175533140229539500_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_78026922427095127889349286485473637599668485928077636658291975481119784519785.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 0,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_78026922427095127889349286485473637599668485928077636658291975481119784519785.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_78026922427095127889349286485473637599668485928077636658291975481119784519785_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_9346924099824711536539032078151085189443915008930659598447811875111039632784.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 2,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_9346924099824711536539032078151085189443915008930659598447811875111039632784.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_9346924099824711536539032078151085189443915008930659598447811875111039632784_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_25242963646400654702106459989906800390022232574817610508308268006381249149329.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 3,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_25242963646400654702106459989906800390022232574817610508308268006381249149329.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_25242963646400654702106459989906800390022232574817610508308268006381249149329_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_40094282371843787311335834625852797777585725091535934641769601292187430805697.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 4,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_40094282371843787311335834625852797777585725091535934641769601292187430805697.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_40094282371843787311335834625852797777585725091535934641769601292187430805697_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_9071489901908398584897362463538394194725329818683044604050172679966500510191.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 5,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_9071489901908398584897362463538394194725329818683044604050172679966500510191.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_9071489901908398584897362463538394194725329818683044604050172679966500510191_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_89546647876136754644106683506655326608661359458209379917774218919847888814763.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 6,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_89546647876136754644106683506655326608661359458209379917774218919847888814763.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_89546647876136754644106683506655326608661359458209379917774218919847888814763_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_106053529491465482971179508695833170786306256303019182066925921322801678210472.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 7,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_106053529491465482971179508695833170786306256303019182066925921322801678210472.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_106053529491465482971179508695833170786306256303019182066925921322801678210472_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_45985424182347671123178917851129358893082428964627928028841008563477018500297.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 8,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_45985424182347671123178917851129358893082428964627928028841008563477018500297.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_45985424182347671123178917851129358893082428964627928028841008563477018500297_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_16195722012603230480254047090087310010133295768774693706239409233804962361603.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 9,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_16195722012603230480254047090087310010133295768774693706239409233804962361603.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_16195722012603230480254047090087310010133295768774693706239409233804962361603_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_87685325978367082234765495293879689247233383341977418317236791369048907971410.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 10,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_87685325978367082234765495293879689247233383341977418317236791369048907971410.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_87685325978367082234765495293879689247233383341977418317236791369048907971410_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/37816_4573389751704945695746193310489204014147586187991719231745915945079114349541.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 11,
+          "original": "https://static.tokkobroker.com/original_pictures/37816_4573389751704945695746193310489204014147586187991719231745915945079114349541.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/37816_4573389751704945695746193310489204014147586187991719231745915945079114349541_thumb.jpg"
+        }
+      ],
+      "producer": {
+        "cellphone": "549113041-5550",
+        "email": "mariana@altamirano.com.ar",
+        "id": 304,
+        "name": "Mariana Schnabel",
+        "phone": "4849-1900",
+        "picture": "https://static.tokkobroker.com/userprofile/pictures/34747426682438508777044898216669655449836327967856635623855756125642613496711",
+        "position": "Ventas - Alquileres"
+      },
+      "property_condition": "Good",
+      "public_url": "https://ficha.info/p/djZ6ce4e2Ga",
+      "publication_title": "Departamento de 2 ambientes en Venta en Villa Ballester",
+      "real_address": "Lavalle 1944 2° G",
+      "reference_code": "AAP37816",
+      "rich_description": "\n\nCódigo de propiedad: ( AAP37816)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+      "roofed_surface": "38.00",
+      "room_amount": 2,
+      "semiroofed_surface": "6.00",
+      "situation": "Empty",
+      "status": 2,
+      "suite_amount": 1,
+      "surface": "44.00",
+      "surface_measurement": "M2",
+      "tags": [
+        {
+          "id": 1,
+          "name": "Water",
+          "type": 1
+        },
+        {
+          "id": 2,
+          "name": "Sewage",
+          "type": 1
+        },
+        {
+          "id": 3,
+          "name": "Natural Gas",
+          "type": 1
+        },
+        {
+          "id": 10,
+          "name": "Balcony",
+          "type": 2
+        },
+        {
+          "id": 12,
+          "name": "Kitchen",
+          "type": 2
+        },
+        {
+          "id": 21,
+          "name": "Living",
+          "type": 2
+        }
+      ],
+      "toilet_amount": 0,
+      "total_surface": "44.00",
+      "transaction_requirements": "",
+      "type": {
+        "code": "AP",
+        "id": 2,
+        "name": "Apartment"
+      },
+      "unroofed_surface": "0.00",
+      "videos": [],
+      "web_price": true,
+      "zonification": "Residencial"
+    },
+    {
+      "address": "República al 4600 esquina Pueyrredón",
+      "age": 9,
+      "bathroom_amount": 1,
+      "branch": {
+        "address": "Alvear 2400",
+        "alternative_phone": "44441900",
+        "alternative_phone_area": "11",
+        "alternative_phone_country_code": "+549",
+        "alternative_phone_extension": "",
+        "branch_type": "Internal",
+        "contact_time": "Lun a Vie de  9.00 a 13 y 14a 18 hs, Sab de 9.30 a 13 hs",
+        "created_date": "2016-09-29T17:11:40",
+        "display_name": "Altamirano propiedades",
+        "email": "info@altamirano.com.ar",
+        "geo_lat": "-34.54738623167675",
+        "geo_long": "-58.551349570562365",
+        "gm_location_type": "BY_HAND",
+        "id": 680,
+        "is_default": false,
+        "logo": "https://static.tokkobroker.com/branch_logos/680/logo%20para%20tokko%20(729%20x%20270%20px).png",
+        "name": "oficina Villa Ballester",
+        "pdf_footer_text": "",
+        "phone": "4849-1900",
+        "phone_area": "11",
+        "phone_country_code": "",
+        "phone_extension": "",
+        "use_pdf_footer": false
+      },
+      "created_at": "2014-06-24T18:10:09",
+      "custom1": "0.00",
+      "custom_tags": [],
+      "deleted_at": "2024-10-28T20:30:56",
+      "depth_measure": "0.00",
+      "description": "\n\nCódigo de propiedad: ( ALO39726)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+      "description_only": "",
+      "development": null,
+      "development_excel_extra_data": "[]",
+      "disposition": "Front",
+      "expenses": 16000,
+      "extra_attributes": [],
+      "fake_address": "República al 4600 esquina Pueyrredón",
+      "files": [],
+      "floors_amount": 1,
+      "footer": "Código de propiedad: ( ALO39726)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+      "front_measure": "0.00",
+      "geo_lat": "-34.5475547861",
+      "geo_long": "-58.5492395635",
+      "gm_location_type": "BY_HAND",
+      "has_temporary_rent": false,
+      "id": 39726,
+      "is_denounced": false,
+      "is_starred_on_web": false,
+      "legally_checked": "Unknown",
+      "location": {
+        "divisions": [
+          {
+            "id": 25035,
+            "name": "Chilavert",
+            "resource_uri": "/api/v1/location/25035/"
+          },
+          {
+            "id": 25036,
+            "name": "Malaver",
+            "resource_uri": "/api/v1/location/25036/"
+          },
+          {
+            "id": 25037,
+            "name": "V.Zagala",
+            "resource_uri": "/api/v1/location/25037/"
+          }
+        ],
+        "full_location": "Argentina | G.B.A. Zona Norte | General San Martin | Villa Ballester",
+        "id": 25034,
+        "name": "Villa Ballester",
+        "parent_division": "/api/v1/location/25013/",
+        "short_location": "G.B.A. Zona Norte | General San Martin | Villa Ballester",
+        "state": null,
+        "weight": 7615
+      },
+      "occupation": [],
+      "operations": [
+        {
+          "operation_id": 1,
+          "operation_type": "Sale",
+          "prices": [
+            {
+              "currency": "USD",
+              "period": 0,
+              "price": 70000
+            }
+          ]
+        }
+      ],
+      "orientation": "West",
+      "parking_lot_amount": 0,
+      "photos": [
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/859885124741963329778720932631737012775841198223080957555570097810644329430679305.jpg",
+          "is_blueprint": false,
+          "is_front_cover": true,
+          "order": 1,
+          "original": "https://static.tokkobroker.com/original_pictures/85124741963329778720932631737012775841198223080957555570097810644329430679305.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/85124741963329778720932631737012775841198223080957555570097810644329430679305_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/8598101624469984900213950948630654088418322972868316658076650163880174961010327800.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 0,
+          "original": "https://static.tokkobroker.com/original_pictures/101624469984900213950948630654088418322972868316658076650163880174961010327800.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/101624469984900213950948630654088418322972868316658076650163880174961010327800_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/859898887712185966692424865022864452124544193030972817157170379070976589357814990.jpg",
+          "is_blueprint": true,
+          "is_front_cover": false,
+          "order": 2,
+          "original": "https://static.tokkobroker.com/original_pictures/98887712185966692424865022864452124544193030972817157170379070976589357814990.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/98887712185966692424865022864452124544193030972817157170379070976589357814990_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/8598106714070299886098653856649616855770311886335382862297446925694613518747939834.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 3,
+          "original": "https://static.tokkobroker.com/original_pictures/106714070299886098653856649616855770311886335382862297446925694613518747939834.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/106714070299886098653856649616855770311886335382862297446925694613518747939834_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/859859020942188658657931526351488105480939479924040487081045712600514204751107214.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 4,
+          "original": "https://static.tokkobroker.com/original_pictures/59020942188658657931526351488105480939479924040487081045712600514204751107214.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/59020942188658657931526351488105480939479924040487081045712600514204751107214_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/39726_112379366750063749169674413541015487203511249202249709344440957257579564375865.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 5,
+          "original": "https://static.tokkobroker.com/original_pictures/39726_112379366750063749169674413541015487203511249202249709344440957257579564375865.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/39726_112379366750063749169674413541015487203511249202249709344440957257579564375865_thumb.jpg"
+        }
+      ],
+      "producer": {
+        "cellphone": "1533802334",
+        "email": "mariano@altamirano.com.ar",
+        "id": 5449,
+        "name": "Mariano Micolucci",
+        "phone": "",
+        "picture": "https://static.tokkobroker.com/userprofile/pictures/39484543863376336871844198242476500518056440388943672166738566674466866437012",
+        "position": ""
+      },
+      "property_condition": "Excellent",
+      "public_url": "https://ficha.info/p/dkuUdbz3eCAa",
+      "publication_title": "Local comercial en Esquina. Frente a  Hospital Marengo.",
+      "real_address": "República 4605 Local 5 esquina sobre Pueyrredón",
+      "reference_code": "ALO39726",
+      "rich_description": "\n\nCódigo de propiedad: ( ALO39726)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+      "roofed_surface": "30.00",
+      "room_amount": 0,
+      "semiroofed_surface": "0.00",
+      "situation": "In use",
+      "status": 2,
+      "suite_amount": 0,
+      "surface": "30.00",
+      "surface_measurement": "M2",
+      "tags": [
+        {
+          "id": 1,
+          "name": "Water",
+          "type": 1
+        },
+        {
+          "id": 2,
+          "name": "Sewage",
+          "type": 1
+        },
+        {
+          "id": 26,
+          "name": "Toilette",
+          "type": 2
+        }
+      ],
+      "toilet_amount": 0,
+      "total_surface": "30.00",
+      "transaction_requirements": "",
+      "type": {
+        "code": "LO",
+        "id": 7,
+        "name": "Bussiness Premises"
+      },
+      "unroofed_surface": "0.00",
+      "videos": [],
+      "web_price": true,
+      "zonification": "Comercial"
+    },
+    {
+      "address": "Republica  esquina pueyrredon ",
+      "age": 9,
+      "bathroom_amount": 1,
+      "branch": null,
+      "created_at": "2014-06-24T18:30:53",
+      "custom1": "0.00",
+      "custom_tags": [],
+      "deleted_at": "2024-10-28T20:31:01",
+      "depth_measure": "0.00",
+      "description": "\n\nCódigo de propiedad: ( ALO39728)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+      "description_only": "",
+      "development": null,
+      "development_excel_extra_data": "[]",
+      "disposition": "Front",
+      "expenses": 16000,
+      "extra_attributes": [],
+      "fake_address": "Republica  esquina pueyrredon ",
+      "files": [],
+      "floors_amount": 1,
+      "footer": "Código de propiedad: ( ALO39728)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+      "front_measure": "0.00",
+      "geo_lat": "-34.5475920595",
+      "geo_long": "-58.5493137513",
+      "gm_location_type": "BY_HAND",
+      "has_temporary_rent": false,
+      "id": 39728,
+      "is_denounced": false,
+      "is_starred_on_web": false,
+      "legally_checked": "Unknown",
+      "location": {
+        "divisions": [
+          {
+            "id": 25035,
+            "name": "Chilavert",
+            "resource_uri": "/api/v1/location/25035/"
+          },
+          {
+            "id": 25036,
+            "name": "Malaver",
+            "resource_uri": "/api/v1/location/25036/"
+          },
+          {
+            "id": 25037,
+            "name": "V.Zagala",
+            "resource_uri": "/api/v1/location/25037/"
+          }
+        ],
+        "full_location": "Argentina | G.B.A. Zona Norte | General San Martin | Villa Ballester",
+        "id": 25034,
+        "name": "Villa Ballester",
+        "parent_division": "/api/v1/location/25013/",
+        "short_location": "G.B.A. Zona Norte | General San Martin | Villa Ballester",
+        "state": null,
+        "weight": 7615
+      },
+      "occupation": [],
+      "operations": [
+        {
+          "operation_id": 1,
+          "operation_type": "Sale",
+          "prices": [
+            {
+              "currency": "USD",
+              "period": 0,
+              "price": 62000
+            }
+          ]
+        }
+      ],
+      "orientation": "South-West",
+      "parking_lot_amount": 0,
+      "photos": [
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/39728_326302792481256957316824621629690327352451622162197772736735288425791406054.jpg",
+          "is_blueprint": false,
+          "is_front_cover": true,
+          "order": 3,
+          "original": "https://static.tokkobroker.com/original_pictures/39728_326302792481256957316824621629690327352451622162197772736735288425791406054.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/39728_326302792481256957316824621629690327352451622162197772736735288425791406054_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/859880295769383788783426544581629144997683813904869964333673321560528747898197530.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 0,
+          "original": "https://static.tokkobroker.com/pictures/80295769383788783426544581629144997683813904869964333673321560528747898197530.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/80295769383788783426544581629144997683813904869964333673321560528747898197530_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/39728_12373147745652397103794104238206191324471578092242991303275742877086443856590.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 1,
+          "original": "https://static.tokkobroker.com/original_pictures/39728_12373147745652397103794104238206191324471578092242991303275742877086443856590.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/39728_12373147745652397103794104238206191324471578092242991303275742877086443856590_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/39728_99761757318220477427918865274533560054593989399279663543484552818642648986583.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 2,
+          "original": "https://static.tokkobroker.com/original_pictures/39728_99761757318220477427918865274533560054593989399279663543484552818642648986583.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/39728_99761757318220477427918865274533560054593989399279663543484552818642648986583_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/39728_15154521353508443404963428180796114980706635253526305478176889715950825418391.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 4,
+          "original": "https://static.tokkobroker.com/original_pictures/39728_15154521353508443404963428180796114980706635253526305478176889715950825418391.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/39728_15154521353508443404963428180796114980706635253526305478176889715950825418391_thumb.jpg"
+        },
+        {
+          "description": null,
+          "image": "https://static.tokkobroker.com/w_pics/39728_97450830045425639702685969197780046826449863804636173582872750029123221985783.jpg",
+          "is_blueprint": false,
+          "is_front_cover": false,
+          "order": 5,
+          "original": "https://static.tokkobroker.com/original_pictures/39728_97450830045425639702685969197780046826449863804636173582872750029123221985783.jpg",
+          "thumb": "https://static.tokkobroker.com/thumbs/39728_97450830045425639702685969197780046826449863804636173582872750029123221985783_thumb.jpg"
+        }
+      ],
+      "producer": {
+        "cellphone": "",
+        "email": "alejandro@altamirano.com.ar",
+        "id": 290,
+        "name": "Alejandro Altamirano",
+        "phone": "4849-1900",
+        "picture": "https://static.tokkobroker.com/userprofile/pictures/25139967598940900637034695696010369898299534445935635579603832577374833735511",
+        "position": ""
+      },
+      "property_condition": "---",
+      "public_url": "https://ficha.info/p/dkuWceQfida",
+      "publication_title": "Local comercial en Esquina. Frente a  Hospital Marengo.",
+      "real_address": "Republica esq. Pueyrredon Local 4 ingreso sobre republica",
+      "reference_code": "ALO39728",
+      "rich_description": "\n\nCódigo de propiedad: ( ALO39728)\n\nAltamirano \n60 años - 3 generaciones\nC.M.C.P.S.M. 2447 \nAlejandro J. Altamirano\n\n* Antes de iniciar la visita se le pedirá completar un registro con datos básicos a todos los mayores de 18 años que deseen ingresar al inmueble. Gracias por su colaboración con el agente de ventas que lo acompañará. ¡Buena visita!\n* Coti en trámite por el Propietario.\n* Las medidas y características expresadas son aproximadas y a corroborar con la documentación.\n* El inventario queda sujeto a consideración del propietario.",
+      "roofed_surface": "33.00",
+      "room_amount": 0,
+      "semiroofed_surface": "0.00",
+      "situation": "Empty",
+      "status": 2,
+      "suite_amount": 0,
+      "surface": "33.00",
+      "surface_measurement": "M2",
+      "tags": [
+        {
+          "id": 1,
+          "name": "Water",
+          "type": 1
+        },
+        {
+          "id": 2,
+          "name": "Sewage",
+          "type": 1
+        },
+        {
+          "id": 26,
+          "name": "Toilette",
+          "type": 2
+        },
+        {
+          "id": 47,
+          "name": "Work able",
+          "type": 3
+        }
+      ],
+      "toilet_amount": 0,
+      "total_surface": "33.00",
+      "transaction_requirements": "",
+      "type": {
+        "code": "LO",
+        "id": 7,
+        "name": "Bussiness Premises"
+      },
+      "unroofed_surface": "0.00",
+      "videos": [],
+      "web_price": true,
+      "zonification": ""
+    }
+  ]
+}
